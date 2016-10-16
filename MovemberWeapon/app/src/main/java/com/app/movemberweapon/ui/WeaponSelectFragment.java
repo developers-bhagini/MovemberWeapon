@@ -26,6 +26,7 @@ public class WeaponSelectFragment extends Fragment implements View.OnClickListen
     private ImageView mOkButtonImageView;
     private GridView mGridView;
     private GridViewAdaptor mGridViewAdaptor;
+    Bitmap thumbnail;
 
     public WeaponSelectFragment() {
         // Required empty public constructor
@@ -40,7 +41,10 @@ public class WeaponSelectFragment extends Fragment implements View.OnClickListen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            thumbnail = (Bitmap)bundle.getParcelable("Photo");
+        }
     }
 
     @Override
@@ -56,6 +60,10 @@ public class WeaponSelectFragment extends Fragment implements View.OnClickListen
         return mRootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 
     private ArrayList<ImageItem> getData() {
         final ArrayList<ImageItem> imageItems = new ArrayList<>();

@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/app_back_ground"
-    android:orientation="vertical">
+    android:background="@drawable/app_back_ground">
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/action_bar_height_size"
+        android:layout_width="368dp"
+        android:layout_height="120dp"
         android:background="@drawable/menu_tab"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:id="@+id/relativeLayout2"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true">
 
         <Button
             android:id="@+id/menu_button"
@@ -22,30 +25,46 @@
     </RelativeLayout>
 
     <ImageView
+        android:id="@+id/proceed_id"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/proceed_image"
+        android:layout_below="@+id/capture_demo_screen"
+        android:layout_alignRight="@+id/relativeLayout2"
+        android:layout_alignEnd="@+id/relativeLayout2"
+        android:layout_marginRight="34dp"
+        android:layout_marginEnd="34dp" />
+
+    <ImageView
+        android:id="@+id/retake_id"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/retake_image"
+        android:layout_marginRight="28dp"
+        android:layout_marginEnd="28dp"
+        android:layout_below="@+id/capture_demo_screen"
+        android:layout_toLeftOf="@+id/proceed_id"
+        android:layout_toStartOf="@+id/proceed_id" />
+
+    <ImageView
         android:id="@+id/capture_demo_screen"
-        android:layout_width="match_parent"
-        android:layout_height="365dp"
-        app:srcCompat="@drawable/capture_demo_screen" />
+        android:layout_width="240dp"
+        android:layout_height="280dp"
+        android:background="@null"
+        android:src="@drawable/white_box"
+        android:layout_marginTop="65dp"
+        android:layout_below="@+id/relativeLayout2"
+        android:layout_alignLeft="@+id/retake_id"
+        android:layout_alignStart="@+id/retake_id" />
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+    <ImageView
+        android:id="@+id/man_image"
+        android:layout_width="260dp"
+        android:layout_height="80dp"
+        android:background="@null"
+        android:src="@drawable/man_head"
+        android:layout_below="@+id/relativeLayout2"
+        android:layout_centerHorizontal="true" />
 
-        <ImageView
-            android:id="@+id/retake_id"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="50dp"
-            android:src="@drawable/retake_image" />
 
-        <ImageView
-            android:id="@+id/proceed_id"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="50dp"
-            android:src="@drawable/proceed_image" />
-    </RelativeLayout>
-</LinearLayout>
+</RelativeLayout>
