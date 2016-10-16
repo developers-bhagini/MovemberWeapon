@@ -3,25 +3,24 @@ package com.app.movemberweapon.ui;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.app.movemberweapon.R;
-import com.app.movemberweapon.util.Constants;
 
 
-public class SplashScreenFragment extends Fragment {
+public class OpenCameraFragment extends Fragment implements View.OnClickListener {
     private View mRootView;
-
-    public SplashScreenFragment() {
+    private ImageView mOpenCamera;
+    public OpenCameraFragment() {
         // Required empty public constructor
     }
 
 
-    public static SplashScreenFragment newInstance() {
-        SplashScreenFragment fragment = new SplashScreenFragment();
+    public static OpenCameraFragment newInstance() {
+        OpenCameraFragment fragment = new OpenCameraFragment();
         return fragment;
     }
 
@@ -34,20 +33,21 @@ public class SplashScreenFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mRootView = inflater.inflate(R.layout.splash_screen_layout, container,false);
+        mRootView = inflater.inflate(R.layout.open_camera_fragment, container,false);
+        mOpenCamera= (ImageView) mRootView.findViewById(R.id.open_camera_id);
+        mOpenCamera.setOnClickListener(this);
         return mRootView;
     }
 
+
     @Override
-    public void onResume() {
-        super.onResume();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.open_camera_id:
                 FragmentTransaction lTransaction=getFragmentManager().beginTransaction();
-                lTransaction.replace(R.id.container,OpenCameraFragment.newInstance());
+                lTransaction.replace(R.id.container,CaptureCameraFragment.newInstance());
                 lTransaction.commitAllowingStateLoss();
-            }
-        }, Constants.SPLASH_TIME);
+                break;
+        }
     }
 }

@@ -6,5 +6,4 @@ package com.app.movemberweapon.util;
 
 public class Constants {
     public static final int SPLASH_TIME = 2 * 1000;
-    public static final String TEST="test";
 }

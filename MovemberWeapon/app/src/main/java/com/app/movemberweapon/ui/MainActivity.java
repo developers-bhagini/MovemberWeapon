@@ -2,7 +2,6 @@ package com.app.movemberweapon.ui;
 
 
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
@@ -21,19 +20,14 @@ public class MainActivity extends AppCompatActivity {
         if (null != lActionBar) {
             lActionBar.hide();
         }
-        
-        FragmentTransaction lTransaction=getFragmentManager().beginTransaction();
-        lTransaction.replace(R.layout.splash_screen_layout,)
+        SplashScreenFragment lSplashScreenFragment = SplashScreenFragment.newInstance();
+        FragmentTransaction lTransaction = getFragmentManager().beginTransaction();
+        lTransaction.replace(R.id.container, lSplashScreenFragment);
+        lTransaction.commitAllowingStateLoss();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        }, Constants.SPLASH_TIME);
     }
 }

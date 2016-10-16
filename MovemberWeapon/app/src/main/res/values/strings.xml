@@ -3,6 +3,29 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="test">Hello blank fragment</string>
-    <string name="test1">Hello blank fragment1</string>
+
+    <string-array name="image_array_list">
+        <item>@drawable/image_1</item>
+        <item>@drawable/image_2</item>
+        <item>@drawable/image_3</item>
+        <item>@drawable/image_4</item>
+        <item>@drawable/image_5</item>
+        <item>@drawable/image_6</item>
+        <item>@drawable/image_7</item>
+        <item>@drawable/image_8</item>
+        <item>@drawable/image_9</item>
+    </string-array>
+
+    <string-array name="name_array_list">
+        <item>THE TRUCKER</item>
+        <item>THE REGENT</item>
+        <item>THE BOX CAR</item>
+        <item>THE CONNOISSEUR</item>
+        <item>THE ABRACADABRA</item>
+        <item>THE WISP</item>
+        <item>THE UNDERCOVER</item>
+        <item>THE ROCKSTAR</item>
+        <item>THE AFTER EIGHT</item>
+    </string-array>
+
 </resources>
