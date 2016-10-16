@@ -72,7 +72,9 @@ public class PreviewCameraFragment extends Fragment implements View.OnClickListe
                 WeaponSelectFragment weaponFragment=new WeaponSelectFragment();
                 weaponFragment.setArguments(mBundle);
                 FragmentTransaction lTransaction = getFragmentManager().beginTransaction();
-                lTransaction.replace(R.id.container, WeaponSelectFragment.newInstance());
+                lTransaction.setCustomAnimations(R.animator.slide_in_from_right, R.animator.slide_out_towards_left, R.animator.slide_in_from_leftt, R.animator.slide_out_towards_right);
+                lTransaction.addToBackStack(null);
+                lTransaction.replace(R.id.container, weaponFragment);
                 lTransaction.commitAllowingStateLoss();
                 break;
         }

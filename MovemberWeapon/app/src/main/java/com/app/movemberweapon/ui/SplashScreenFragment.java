@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import com.app.movemberweapon.R;
 import com.app.movemberweapon.util.Constants;
@@ -45,8 +44,9 @@ public class SplashScreenFragment extends Fragment {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                FragmentTransaction lTransaction=getFragmentManager().beginTransaction();
-                lTransaction.replace(R.id.container,OpenCameraFragment.newInstance());
+                FragmentTransaction lTransaction = getFragmentManager().beginTransaction();
+                lTransaction.setCustomAnimations(R.animator.slide_in_from_right, R.animator.slide_out_towards_left, R.animator.slide_in_from_leftt, R.animator.slide_out_towards_right);
+                lTransaction.replace(R.id.container, OpenCameraFragment.newInstance());
                 lTransaction.commitAllowingStateLoss();
             }
         }, Constants.SPLASH_TIME);

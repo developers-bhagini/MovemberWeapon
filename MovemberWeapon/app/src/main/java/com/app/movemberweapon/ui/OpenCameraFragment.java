@@ -254,6 +254,8 @@ public class OpenCameraFragment extends Fragment implements View.OnClickListener
         PreviewCameraFragment previewFragment = new PreviewCameraFragment();
         previewFragment.setArguments(mBundle);
         FragmentTransaction lTransaction = getFragmentManager().beginTransaction();
+        lTransaction.setCustomAnimations(R.animator.slide_in_from_right, R.animator.slide_out_towards_left, R.animator.slide_in_from_leftt, R.animator.slide_out_towards_right);
+        lTransaction.addToBackStack(null);
         lTransaction.replace(R.id.container, previewFragment);
         lTransaction.commitAllowingStateLoss();
     }
