@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.app.movemberweapon.R;
 import com.app.movemberweapon.util.Constants;
@@ -34,7 +35,7 @@ public class SplashScreenFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mRootView = inflater.inflate(R.layout.splash_screen_layout, container,false);
+        mRootView = inflater.inflate(R.layout.splash_screen_layout, container, false);
         return mRootView;
     }
 

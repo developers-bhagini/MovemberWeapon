@@ -11,17 +11,18 @@ import android.widget.ImageView;
 import com.app.movemberweapon.R;
 
 
-public class CaptureCameraFragment extends Fragment implements View.OnClickListener {
+public class PreviewCameraFragment extends Fragment implements View.OnClickListener {
     private View mRootView;
-    private ImageView mCaptureView;
+    private ImageView mRetakeButton;
+    private ImageView mProceedButton;
 
-    public CaptureCameraFragment() {
+    public PreviewCameraFragment() {
         // Required empty public constructor
     }
 
 
-    public static CaptureCameraFragment newInstance() {
-        CaptureCameraFragment fragment = new CaptureCameraFragment();
+    public static PreviewCameraFragment newInstance() {
+        PreviewCameraFragment fragment = new PreviewCameraFragment();
         return fragment;
     }
 
@@ -34,9 +35,11 @@ public class CaptureCameraFragment extends Fragment implements View.OnClickListe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mRootView = inflater.inflate(R.layout.capture_camera_fragment, container, false);
-        mCaptureView = (ImageView) mRootView.findViewById(R.id.capture_image_id);
-        mCaptureView.setOnClickListener(this);
+        mRootView = inflater.inflate(R.layout.preview_camera_fragment, container, false);
+        mRetakeButton = (ImageView) mRootView.findViewById(R.id.retake_id);
+        mProceedButton = (ImageView) mRootView.findViewById(R.id.proceed_id);
+        mRetakeButton.setOnClickListener(this);
+        mProceedButton.setOnClickListener(this);
         return mRootView;
     }
 
@@ -44,7 +47,10 @@ public class CaptureCameraFragment extends Fragment implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.capture_image_id:
+            case R.id.retake_id:
+                //todo:
+                break;
+            case R.id.proceed_id:
                 FragmentTransaction lTransaction = getFragmentManager().beginTransaction();
                 lTransaction.replace(R.id.container, WeaponSelectFragment.newInstance());
                 lTransaction.commitAllowingStateLoss();

@@ -45,7 +45,7 @@ public class OpenCameraFragment extends Fragment implements View.OnClickListener
         switch (v.getId()){
             case R.id.open_camera_id:
                 FragmentTransaction lTransaction=getFragmentManager().beginTransaction();
-                lTransaction.replace(R.id.container,CaptureCameraFragment.newInstance());
+                lTransaction.replace(R.id.container,PreviewCameraFragment.newInstance());
                 lTransaction.commitAllowingStateLoss();
                 break;
         }
