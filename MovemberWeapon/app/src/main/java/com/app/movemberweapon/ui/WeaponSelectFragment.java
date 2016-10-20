@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -34,6 +35,7 @@ public class WeaponSelectFragment extends Fragment implements View.OnClickListen
     private Bitmap thumbnail;
     private int _xDelta;
     private int _yDelta;
+    private ScaleGestureDetector mScaleGestureDetector;
 
     public WeaponSelectFragment() {
         // Required empty public constructor

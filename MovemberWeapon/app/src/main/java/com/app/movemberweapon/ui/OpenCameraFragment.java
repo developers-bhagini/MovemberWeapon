@@ -1,5 +1,6 @@
 package com.app.movemberweapon.ui;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -7,6 +8,7 @@ import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,6 +22,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -131,8 +135,8 @@ public class OpenCameraFragment extends Fragment implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.open_camera_id:
-                selectImage();
-
+                checkForPermission();
+                //selectImage();
                 break;
         }
     }
@@ -150,10 +154,6 @@ public class OpenCameraFragment extends Fragment implements View.OnClickListener
                 } else {
                     Toast.makeText(getActivity(), getString(R.string.device_not_supported_text), Toast.LENGTH_SHORT).show();
                 }
-            } else {
-                /*if (null != mCallbackManager) {
-                    mCallbackManager.onActivityResult(requestCode, resultCode, data);
-                }*/
             }
         }
     }
@@ -194,34 +194,14 @@ public class OpenCameraFragment extends Fragment implements View.OnClickListener
     //TODO:needs to be more generic code for xiomi
     private void onSelectFromGalleryResult(Intent data) {
         Uri selectedImageUri = data.getData();
-        String[] projection = {MediaStore.MediaColumns.DATA};
-        Cursor cursor = getActivity().getContentResolver().query(selectedImageUri, projection, null, null,
-                null);
-        Log.d(TAG, "data cursor");
-        if (null != cursor && cursor.moveToNext()) {
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-            cursor.moveToFirst();
-            String selectedImagePath = cursor.getString(column_index);
-
-            Bitmap thumbnail;
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            BitmapFactory.decodeFile(selectedImagePath, options);
-            final int REQUIRED_SIZE = 400;
-            int scale = 1;
-            while (options.outWidth / scale / 2 >= REQUIRED_SIZE
-                    && options.outHeight / scale / 2 >= REQUIRED_SIZE)
-                scale *= 2;
-            options.inSampleSize = scale;
-            options.inJustDecodeBounds = false;
-
-            thumbnail = BitmapFactory.decodeFile(selectedImagePath, options);
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImageUri);
             //Giving device width to the square image
-            thumbnail = Bitmap.createScaledBitmap(thumbnail, getDeviceWidth(), getDeviceWidth(), true);
-            mBundle.putParcelable("Photo", thumbnail);
+            bitmap = Bitmap.createScaledBitmap(bitmap, getDeviceWidth(), getDeviceWidth(), true);
+            mBundle.putParcelable("Photo", bitmap);
             goToNextScreen();
-        } else {
-            Toast.makeText(getActivity(), getString(R.string.device_not_supported_text), Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            Log.e(TAG, "Exception :: ", e);
         }
     }
 
@@ -231,24 +211,6 @@ public class OpenCameraFragment extends Fragment implements View.OnClickListener
         return displaymetrics.widthPixels;
     }
 
-    public Bitmap getCroppedBitmap(Bitmap bitmap) {
-        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
-                bitmap.getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(output);
-
-        final int color = 0xff424242;
-        final Paint paint = new Paint();
-        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-
-        paint.setAntiAlias(true);
-        canvas.drawARGB(0, 0, 0, 0);
-        paint.setColor(color);
-        canvas.drawCircle(bitmap.getWidth() / 2, bitmap.getHeight() / 2,
-                bitmap.getWidth() / 2, paint);
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(bitmap, rect, rect, paint);
-        return output;
-    }
 
     private void goToNextScreen() {
         PreviewCameraFragment previewFragment = new PreviewCameraFragment();
@@ -260,9 +222,36 @@ public class OpenCameraFragment extends Fragment implements View.OnClickListener
         lTransaction.commitAllowingStateLoss();
     }
 
+    private void checkForPermission() {
+        boolean hasPermission = (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) &&
+                (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) &&
+                (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED);
+        if (!hasPermission) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, Constants.REQUEST_PERMISSION);
+        } else {
+            selectImage();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case Constants.REQUEST_PERMISSION: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(getActivity(), "Permission Granted", Toast.LENGTH_LONG).show();
+                    selectImage();
+                } else {
+                    Toast.makeText(getActivity(), "The app was not allowed to write to your storage. Hence, it cannot function properly. Please consider granting it this permission", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+
+    }
+
     public class LoadImagesFromSDCard extends AsyncTask<String, Void, Void> {
 
-        Bitmap mBitmap;
+        private Bitmap mBitmap;
         private ProgressDialog Dialog = new ProgressDialog(getActivity());
 
         protected void onPreExecute() {

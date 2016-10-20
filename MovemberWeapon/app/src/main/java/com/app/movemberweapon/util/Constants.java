@@ -13,4 +13,5 @@ public class Constants {
     public static final String DUDE_MUSIC_PAGE_ID = "344919009232725";//for dude music
     public static final String DUDE_BOOK_PAGE_ID = "324908554536504";//for dude music
     public static final boolean FACEBOOK_DEBUG = true;
+    public static final int REQUEST_PERMISSION = 112;
 }
