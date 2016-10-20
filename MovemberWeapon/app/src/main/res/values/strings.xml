@@ -6,7 +6,7 @@
     <string name="select_photo_dialog__title_text">Select Photo</string>
     <string name="device_not_supported_text">Device not supported</string>
     <string name="choose_weapon_text">Choose your weapon</string>
-
+    <string name="in_progress_text">In Progress</string>
     <string name="network_error_text">Check your internet connectivity</string>
     <string name="confirmation_title_message_text">Facebook post</string>
     <string name="confirmation_dialog_message_text">Movember app wants to post MoPledge on Facebook Movember page</string>

@@ -2,6 +2,7 @@ package com.app.movemberweapon.ui;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,10 +14,14 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.Toast;
 
 import com.app.movemberweapon.R;
 import com.app.movemberweapon.object.ImageItem;
@@ -36,6 +41,8 @@ public class WeaponSelectFragment extends Fragment implements View.OnClickListen
     private int _xDelta;
     private int _yDelta;
     private ScaleGestureDetector mScaleGestureDetector;
+    private Button mMenuButton;
+    private PopupWindow mPopup_window;
 
     public WeaponSelectFragment() {
         // Required empty public constructor
@@ -60,6 +67,8 @@ public class WeaponSelectFragment extends Fragment implements View.OnClickListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.weapon_select_fragment, container, false);
+        mMenuButton = (Button) mRootView.findViewById(R.id.menu_button);
+        mMenuButton.setOnClickListener(this);
         mMustacheView = (ImageView) mRootView.findViewById(R.id.mustache_view);
         mGridView = (GridView) mRootView.findViewById(R.id.gridView);
         mGridViewAdaptor = new GridViewAdaptor(getActivity(), R.layout.grid_item_layout, getData());
@@ -107,6 +116,24 @@ public class WeaponSelectFragment extends Fragment implements View.OnClickListen
                 lTransaction.replace(R.id.container, lShareFragment);
                 lTransaction.commitAllowingStateLoss();
                 break;
+            case R.id.menu_button:
+                mPopup_window = popupDisplay();
+                mPopup_window.showAsDropDown(v, -40, 18);
+                break;
+            case R.id.home_button:
+                if (null != mPopup_window) {
+                    mPopup_window.dismiss();
+                }
+                FragmentTransaction lTranscation = getFragmentManager().beginTransaction();
+                lTranscation.setCustomAnimations(R.animator.slide_in_from_right, R.animator.slide_out_towards_left, R.animator.slide_in_from_leftt, R.animator.slide_out_towards_right);
+                lTranscation.replace(R.id.container, OpenCameraFragment.newInstance()).commit();
+                break;
+            case R.id.help_button:
+                if (null != mPopup_window) {
+                    mPopup_window.dismiss();
+                }
+                Toast.makeText(getActivity(), getString(R.string.in_progress_text), Toast.LENGTH_SHORT).show();
+                break;
 
         }
     }
@@ -145,5 +172,26 @@ public class WeaponSelectFragment extends Fragment implements View.OnClickListen
         }
         mMustacheView.invalidate();
         return true;
+    }
+
+    public PopupWindow popupDisplay() {
+
+        final PopupWindow popupWindow = new PopupWindow(getActivity());
+
+        // inflate your layout or dynamically add view
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        View view = inflater.inflate(R.layout.custom_popup_layout, null);
+
+        Button item_home = (Button) view.findViewById(R.id.home_button);
+        Button item_help = (Button) view.findViewById(R.id.help_button);
+        item_home.setOnClickListener(this);
+        item_help.setOnClickListener(this);
+        popupWindow.setFocusable(true);
+        popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow.setContentView(view);
+
+        return popupWindow;
     }
 }

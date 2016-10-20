@@ -6,21 +6,16 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -30,16 +25,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.app.movemberweapon.R;
 import com.app.movemberweapon.util.Constants;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 
@@ -50,6 +44,8 @@ public class OpenCameraFragment extends Fragment implements View.OnClickListener
     private ImageView mOpenCamera;
     private Bundle mBundle;
     private Uri imageUri = null;
+    private Button mMenuMutton;
+    private PopupWindow mPopup_window;
 
     public OpenCameraFragment() {
         // Required empty public constructor
@@ -126,17 +122,36 @@ public class OpenCameraFragment extends Fragment implements View.OnClickListener
                              Bundle savedInstanceState) {
         mBundle = new Bundle();
         mRootView = inflater.inflate(R.layout.open_camera_fragment, container, false);
+        mMenuMutton = (Button) mRootView.findViewById(R.id.menu_button);
+        mMenuMutton.setOnClickListener(this);
         mOpenCamera = (ImageView) mRootView.findViewById(R.id.open_camera_id);
         mOpenCamera.setOnClickListener(this);
         return mRootView;
     }
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.open_camera_id:
                 checkForPermission();
-                //selectImage();
+                break;
+            case R.id.menu_button:
+                mPopup_window = popupDisplay();
+                mPopup_window.showAsDropDown(view, -40, 18);
+                break;
+            case R.id.home_button:
+                if (null != mPopup_window) {
+                    mPopup_window.dismiss();
+                }
+                FragmentTransaction lTranscation = getFragmentManager().beginTransaction();
+                lTranscation.setCustomAnimations(R.animator.slide_in_from_right, R.animator.slide_out_towards_left, R.animator.slide_in_from_leftt, R.animator.slide_out_towards_right);
+                lTranscation.replace(R.id.container, OpenCameraFragment.newInstance()).commit();
+                break;
+            case R.id.help_button:
+                if (null != mPopup_window) {
+                    mPopup_window.dismiss();
+                }
+                Toast.makeText(getActivity(), getString(R.string.in_progress_text), Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -303,5 +318,26 @@ public class OpenCameraFragment extends Fragment implements View.OnClickListener
 
         }
 
+    }
+
+    public PopupWindow popupDisplay() {
+
+        final PopupWindow popupWindow = new PopupWindow(getActivity());
+
+        // inflate your layout or dynamically add view
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        View view = inflater.inflate(R.layout.custom_popup_layout, null);
+
+        Button item_home = (Button) view.findViewById(R.id.home_button);
+        Button item_help = (Button) view.findViewById(R.id.help_button);
+        item_home.setOnClickListener(this);
+        item_help.setOnClickListener(this);
+        popupWindow.setFocusable(true);
+        popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow.setContentView(view);
+
+        return popupWindow;
     }
 }

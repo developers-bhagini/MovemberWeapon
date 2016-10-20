@@ -29,12 +29,22 @@
         android:id="@+id/capture_demo_screen"
         android:layout_width="240dp"
         android:layout_height="280dp"
+        android:scaleType="fitStart"
+        android:layout_below="@+id/man_image"
+        android:layout_centerHorizontal="true"
+        android:background="@null"
+        android:src="@drawable/white_box" />
+
+<!--    <ImageView
+        android:id="@+id/capture_demo_screen"
+        android:layout_width="240dp"
+        android:layout_height="280dp"
         android:background="@null"
         android:src="@drawable/white_box"
         android:layout_marginTop="65dp"
         android:layout_below="@+id/relativeLayout2"
         android:layout_alignLeft="@+id/retake_id"
-        android:layout_alignStart="@+id/retake_id" />
+        android:layout_alignStart="@+id/retake_id" />-->
 
     <ImageView
         android:id="@+id/man_image"

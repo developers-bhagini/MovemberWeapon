@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -24,7 +25,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.app.movemberweapon.R;
@@ -43,6 +47,8 @@ public class PreviewCameraFragment extends Fragment implements View.OnClickListe
     private Bitmap thumbnail;
     private Bundle mBundle;
     private Uri imageUri;
+    private PopupWindow mPopup_window;
+    private Button mMenuButton;
 
     public PreviewCameraFragment() {
         // Required empty public constructor
@@ -123,6 +129,8 @@ public class PreviewCameraFragment extends Fragment implements View.OnClickListe
                              Bundle savedInstanceState) {
         mBundle = new Bundle();
         mRootView = inflater.inflate(R.layout.preview_camera_fragment, container, false);
+        mMenuButton = (Button) mRootView.findViewById(R.id.menu_button);
+        mMenuButton.setOnClickListener(this);
         mManImage = (ImageView) mRootView.findViewById(R.id.man_image);
         mPhotoPreview = (ImageView) mRootView.findViewById(R.id.capture_demo_screen);
         mRetakeButton = (ImageView) mRootView.findViewById(R.id.retake_id);
@@ -154,6 +162,24 @@ public class PreviewCameraFragment extends Fragment implements View.OnClickListe
                 lTransaction.addToBackStack(null);
                 lTransaction.replace(R.id.container, weaponFragment);
                 lTransaction.commitAllowingStateLoss();
+                break;
+            case R.id.menu_button:
+                mPopup_window = popupDisplay();
+                mPopup_window.showAsDropDown(v, -40, 18);
+                break;
+            case R.id.home_button:
+                if (null != mPopup_window) {
+                    mPopup_window.dismiss();
+                }
+                FragmentTransaction lTranscation = getFragmentManager().beginTransaction();
+                lTranscation.setCustomAnimations(R.animator.slide_in_from_right, R.animator.slide_out_towards_left, R.animator.slide_in_from_leftt, R.animator.slide_out_towards_right);
+                lTranscation.replace(R.id.container, OpenCameraFragment.newInstance()).commit();
+                break;
+            case R.id.help_button:
+                if (null != mPopup_window) {
+                    mPopup_window.dismiss();
+                }
+                Toast.makeText(getActivity(), getString(R.string.in_progress_text), Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -312,11 +338,33 @@ public class PreviewCameraFragment extends Fragment implements View.OnClickListe
                 Dialog.dismiss();
             }
             if (mBitmap != null) {
-                mPhotoPreview.setImageBitmap(mBitmap);
+                thumbnail = mBitmap;
+                mPhotoPreview.setImageBitmap(thumbnail);
             }
 
         }
 
+    }
+
+    public PopupWindow popupDisplay() {
+
+        final PopupWindow popupWindow = new PopupWindow(getActivity());
+
+        // inflate your layout or dynamically add view
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        View view = inflater.inflate(R.layout.custom_popup_layout, null);
+
+        Button item_home = (Button) view.findViewById(R.id.home_button);
+        Button item_help = (Button) view.findViewById(R.id.help_button);
+        item_home.setOnClickListener(this);
+        item_help.setOnClickListener(this);
+        popupWindow.setFocusable(true);
+        popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow.setContentView(view);
+
+        return popupWindow;
     }
 
 }
