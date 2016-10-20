@@ -1,10 +1,17 @@
 <resources>
+    <string name="facebook_app_id">318949948473554</string>
     <string name="app_name">MovemberWeapon</string>
     <string name="take_photo_text">Take Photo</string>
     <string name="select_from_gallery_text">Select from gallery</string>
     <string name="select_photo_dialog__title_text">Select Photo</string>
     <string name="device_not_supported_text">Device not supported</string>
     <string name="choose_weapon_text">Choose your weapon</string>
+
+    <string name="network_error_text">Check your internet connectivity</string>
+    <string name="confirmation_title_message_text">Facebook post</string>
+    <string name="confirmation_dialog_message_text">Movember app wants to post MoPledge on Facebook Movember page</string>
+    <string name="yes_text">Confirm</string>
+    <string name="no_text">Cancel</string>
 
     <string-array name="image_array_list">
         <item>@drawable/image_1</item>

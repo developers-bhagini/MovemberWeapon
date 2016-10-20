@@ -9,4 +9,8 @@ public class Constants {
 
     public static final int REQUEST_CAMERA = 0;
     public static final int SELECT_FILE = 1;
+    public static final String PAGE_ID = "638254336299826";//for Movember
+    public static final String DUDE_MUSIC_PAGE_ID = "344919009232725";//for dude music
+    public static final String DUDE_BOOK_PAGE_ID = "324908554536504";//for dude music
+    public static final boolean FACEBOOK_DEBUG = true;
 }

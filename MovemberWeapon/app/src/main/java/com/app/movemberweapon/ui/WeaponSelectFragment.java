@@ -100,7 +100,7 @@ public class WeaponSelectFragment extends Fragment implements View.OnClickListen
                 mImageContainer.setDrawingCacheEnabled(true);
                 mImageContainer.buildDrawingCache();
                 Bitmap bitmap = mImageContainer.getDrawingCache();
-                lBundle.putParcelable("Photo", bitmap);
+                lBundle.putParcelable("Photo", bitmap.copy(bitmap.getConfig(),true));
                 lShareFragment.setArguments(lBundle);
                 lTransaction.replace(R.id.container, lShareFragment);
                 lTransaction.commitAllowingStateLoss();
