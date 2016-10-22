@@ -6,9 +6,14 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.PointF;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.v4.view.GestureDetectorCompat;
+import android.support.v4.view.ViewCompat;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -20,29 +25,38 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.app.movemberweapon.R;
 import com.app.movemberweapon.object.ImageItem;
+import com.app.movemberweapon.util.ScaleGestureDetectorCompat;
+import com.app.movemberweapon.util.TouchImageView;
 
 import java.util.ArrayList;
 
 
-public class WeaponSelectFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, View.OnTouchListener {
+public class WeaponSelectFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, View.OnTouchListener,TouchImageView.OnTouchImageViewListener {
     private static final String TAG = WeaponSelectFragment.class.getSimpleName();
     private View mRootView;
     private ImageView mOkButtonImageView;
     private GridView mGridView;
     private GridViewAdaptor mGridViewAdaptor;
-    private ImageView mMustacheView;
+    private TouchImageView mMustacheView;
     private FrameLayout mImageContainer;
     private Bitmap thumbnail;
     private int _xDelta;
     private int _yDelta;
-    private ScaleGestureDetector mScaleGestureDetector;
     private Button mMenuButton;
     private PopupWindow mPopup_window;
+
+    private Matrix matrix = new Matrix();
+    private float scale = 1f;
+    private ScaleGestureDetector SGD;
+
+    private ScaleGestureDetector mScaleGestureDetector;
+    private GestureDetectorCompat mGestureDetector;
 
     public WeaponSelectFragment() {
         // Required empty public constructor
@@ -66,18 +80,22 @@ public class WeaponSelectFragment extends Fragment implements View.OnClickListen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        //SGD = new ScaleGestureDetector(getActivity(),new ScaleListener());
+        mScaleGestureDetector = new ScaleGestureDetector(getActivity(), mScaleGestureListener);
+        mGestureDetector = new GestureDetectorCompat(getActivity(), mGestureListener);
         mRootView = inflater.inflate(R.layout.weapon_select_fragment, container, false);
         mMenuButton = (Button) mRootView.findViewById(R.id.menu_button);
         mMenuButton.setOnClickListener(this);
-        mMustacheView = (ImageView) mRootView.findViewById(R.id.mustache_view);
+        mMustacheView = (TouchImageView) mRootView.findViewById(R.id.mustache_view);
         mGridView = (GridView) mRootView.findViewById(R.id.gridView);
         mGridViewAdaptor = new GridViewAdaptor(getActivity(), R.layout.grid_item_layout, getData());
         mGridView.setAdapter(mGridViewAdaptor);
         mGridView.setOnItemClickListener(this);
         mOkButtonImageView = (ImageView) mRootView.findViewById(R.id.ok_button_id);
         mOkButtonImageView.setOnClickListener(this);
-        mMustacheView.setOnTouchListener(this);
+        mMustacheView.setOnTouchListener(new PrivateOnTouchListener());
         mImageContainer = (FrameLayout) mRootView.findViewById(R.id.image_containter);
+        mImageContainer.setOnTouchListener(this);
         return mRootView;
     }
 
@@ -148,7 +166,10 @@ public class WeaponSelectFragment extends Fragment implements View.OnClickListen
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        final int X = (int) event.getRawX();
+        boolean retVal = mScaleGestureDetector.onTouchEvent(event);
+       // retVal = mGestureDetector.onTouchEvent(event) || retVal;
+
+        /*final int X = (int) event.getRawX();
         final int Y = (int) event.getRawY();
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
@@ -170,9 +191,14 @@ public class WeaponSelectFragment extends Fragment implements View.OnClickListen
                 mMustacheView.setLayoutParams(layoutParams);
                 break;
         }
-        mMustacheView.invalidate();
-        return true;
+        mMustacheView.invalidate();*/
+        return retVal;
     }
+
+    /*public boolean onTouchEvent(MotionEvent ev) {
+        SGD.onTouchEvent(ev);
+        return true;
+    }*/
 
     public PopupWindow popupDisplay() {
 
@@ -193,5 +219,154 @@ public class WeaponSelectFragment extends Fragment implements View.OnClickListen
         popupWindow.setContentView(view);
 
         return popupWindow;
+    }
+
+    /*private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+        @Override
+        public boolean onScale(ScaleGestureDetector detector) {
+            scale *= detector.getScaleFactor();
+            scale = Math.max(0.1f, Math.min(scale, 5.0f));
+
+            matrix.setScale(scale, scale);
+            mMustacheView.setImageMatrix(matrix);
+            return true;
+        }
+    }*/
+
+
+    /**
+     * The scale listener, used for handling multi-finger scale gestures.
+     */
+    private final ScaleGestureDetector.OnScaleGestureListener mScaleGestureListener
+            = new ScaleGestureDetector.SimpleOnScaleGestureListener() {
+
+        private float lastSpanX;
+        private float lastSpanY;
+        float newWidth;
+        float newHeight;
+
+        @Override
+        public boolean onScaleBegin(ScaleGestureDetector detector) {
+            Log.d("mtion","onScaleBegin");
+            lastSpanX = ScaleGestureDetectorCompat.getCurrentSpanX(detector);
+            lastSpanY = ScaleGestureDetectorCompat.getCurrentSpanY(detector);
+            return super.onScaleBegin(detector);
+        }
+
+        /**
+         * This is the active focal point in terms of the viewport. Could be a local
+         * variable but kept here to minimize per-frame allocations.
+         *
+         */
+        @Override
+        public boolean onScale(ScaleGestureDetector detector) {
+            scale *= detector.getScaleFactor();
+            scale = Math.max(0.1f, Math.min(scale, 5.0f));
+            matrix.setScale(scale, scale);
+            float spanX = ScaleGestureDetectorCompat.getCurrentSpanX(detector);
+            float spanY = ScaleGestureDetectorCompat.getCurrentSpanY(detector);
+            newWidth = lastSpanX / spanX * mMustacheView.getWidth();
+            newHeight = lastSpanY / spanY * mMustacheView.getHeight();
+            return true;
+        }
+
+        @Override
+        public void onScaleEnd(ScaleGestureDetector detector) {
+            super.onScaleEnd(detector);
+            FrameLayout.LayoutParams parms = new FrameLayout.LayoutParams(Math.round(newWidth),Math.round(newHeight));
+           // mMustacheView.setLayoutParams(parms);
+            mMustacheView.setImageMatrix(matrix);
+            //mMustacheView.setZoom(scale);
+          //  mMustacheView.invalidate();
+        }
+    };
+
+    /**
+     * The gesture listener, used for handling simple gestures such as double touches, scrolls,
+     * and flings.
+     */
+    private final GestureDetector.SimpleOnGestureListener mGestureListener
+            = new GestureDetector.SimpleOnGestureListener() {
+        private int X;
+        private int Y;
+        @Override
+        public boolean onDown(MotionEvent e) {
+            Log.d("Motion","onDown");
+             /*X = (int) e.getRawX();
+             Y = (int) e.getRawY();
+            FrameLayout.LayoutParams lParams = (FrameLayout.LayoutParams) mMustacheView.getLayoutParams();
+            _xDelta = X - lParams.leftMargin;
+            _yDelta = Y - lParams.topMargin;*/
+            return true;
+        }
+
+
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            Log.d("Motion","onDoubleTap");
+            return true;
+        }
+
+
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            Log.d("Motion","onScroll");
+            /*FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mMustacheView.getLayoutParams();
+            layoutParams.leftMargin = X - _xDelta;
+            layoutParams.topMargin = Y - _yDelta;
+            mMustacheView.setLayoutParams(layoutParams);*/
+            return true;
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            Log.d("Motion","onFling");
+            return true;
+        }
+    };
+
+    @Override
+    public void onMove() {
+        Log.d("Gesture","On-Move");
+    }
+
+    private class PrivateOnTouchListener implements View.OnTouchListener {
+
+        //
+        // Remember last point position for dragging
+        //
+        private PointF last = new PointF();
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            PointF curr = new PointF(event.getX(), event.getY());
+
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        last.set(curr);
+                        break;
+
+                    case MotionEvent.ACTION_MOVE:
+                            float deltaX = curr.x - last.x;
+                            float deltaY = curr.y - last.y;
+
+                        // mMustacheView.setLayoutParams(parms);
+                            //float fixTransX = getFixDragTrans(deltaX, viewWidth, getImageWidth());
+                            //float fixTransY = getFixDragTrans(deltaY, viewHeight, getImageHeight());
+                          //  matrix.postTranslate(curr.x, curr.y);
+                        matrix.setScale(deltaX, deltaY);
+                            last.set(curr.x, curr.y);
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        break;
+                    case MotionEvent.ACTION_POINTER_UP:
+                        break;
+                }
+
+            mMustacheView.setImageMatrix(matrix);
+
+            return true;
+        }
     }
 }

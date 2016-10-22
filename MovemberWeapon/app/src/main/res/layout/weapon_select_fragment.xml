@@ -28,10 +28,10 @@
         android:layout_marginRight="50dp"
         android:layout_height="wrap_content"
         android:layout_weight="7">
-        <ImageView
+        <com.app.movemberweapon.util.TouchImageView
             android:id="@+id/mustache_view"
-            android:layout_width="90dp"
-            android:layout_height="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:scaleType="matrix"
             android:visibility="invisible" />
