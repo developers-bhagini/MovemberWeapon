@@ -62,6 +62,7 @@ public class WeaponSelectFragment extends Fragment implements View.OnClickListen
         // Required empty public constructor
     }
 
+
     public static WeaponSelectFragment newInstance() {
         WeaponSelectFragment fragment = new WeaponSelectFragment();
         return fragment;
