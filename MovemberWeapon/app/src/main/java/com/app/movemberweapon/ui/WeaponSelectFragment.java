@@ -90,7 +90,7 @@ public class WeaponSelectFragment extends Fragment implements View.OnClickListen
         mGridView.setOnItemClickListener(this);
         mOkButtonImageView = (ImageView) mRootView.findViewById(R.id.ok_button_id);
         mOkButtonImageView.setOnClickListener(this);
-        mMustacheView.setOnTouchListener(new PrivateOnTouchListener());
+       // mMustacheView.setOnTouchListener(new PrivateOnTouchListener());
         mImageContainer = (FrameLayout) mRootView.findViewById(R.id.image_containter);
         mImageContainer.setOnTouchListener(this);
         return mRootView;
