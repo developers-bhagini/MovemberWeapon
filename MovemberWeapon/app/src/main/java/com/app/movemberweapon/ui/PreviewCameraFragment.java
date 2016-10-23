@@ -155,7 +155,7 @@ public class PreviewCameraFragment extends Fragment implements View.OnClickListe
                 break;
             case R.id.proceed_id:
                 mBundle.putParcelable("Photo", thumbnail);
-                WeaponSelectFragment weaponFragment = new WeaponSelectFragment();
+                WeaponSelectFragment weaponFragment = WeaponSelectFragment.newInstance();
                 weaponFragment.setArguments(mBundle);
                 FragmentTransaction lTransaction = getFragmentManager().beginTransaction();
                 lTransaction.setCustomAnimations(R.animator.slide_in_from_right, R.animator.slide_out_towards_left, R.animator.slide_in_from_leftt, R.animator.slide_out_towards_right);
