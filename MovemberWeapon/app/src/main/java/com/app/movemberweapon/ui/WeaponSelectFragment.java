@@ -11,7 +11,6 @@ import android.graphics.PointF;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
-import android.support.v4.view.ViewCompat;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -25,25 +24,23 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.app.movemberweapon.R;
 import com.app.movemberweapon.object.ImageItem;
 import com.app.movemberweapon.util.ScaleGestureDetectorCompat;
-import com.app.movemberweapon.util.TouchImageView;
 
 import java.util.ArrayList;
 
 
-public class WeaponSelectFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, View.OnTouchListener,TouchImageView.OnTouchImageViewListener {
+public class WeaponSelectFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, View.OnTouchListener {
     private static final String TAG = WeaponSelectFragment.class.getSimpleName();
     private View mRootView;
     private ImageView mOkButtonImageView;
     private GridView mGridView;
     private GridViewAdaptor mGridViewAdaptor;
-    private TouchImageView mMustacheView;
+    private ImageView mMustacheView;
     private FrameLayout mImageContainer;
     private Bitmap thumbnail;
     private int _xDelta;
@@ -86,7 +83,7 @@ public class WeaponSelectFragment extends Fragment implements View.OnClickListen
         mRootView = inflater.inflate(R.layout.weapon_select_fragment, container, false);
         mMenuButton = (Button) mRootView.findViewById(R.id.menu_button);
         mMenuButton.setOnClickListener(this);
-        mMustacheView = (TouchImageView) mRootView.findViewById(R.id.mustache_view);
+        mMustacheView = (ImageView) mRootView.findViewById(R.id.mustache_view);
         mGridView = (GridView) mRootView.findViewById(R.id.gridView);
         mGridViewAdaptor = new GridViewAdaptor(getActivity(), R.layout.grid_item_layout, getData());
         mGridView.setAdapter(mGridViewAdaptor);
@@ -325,10 +322,6 @@ public class WeaponSelectFragment extends Fragment implements View.OnClickListen
         }
     };
 
-    @Override
-    public void onMove() {
-        Log.d("Gesture","On-Move");
-    }
 
     private class PrivateOnTouchListener implements View.OnTouchListener {
 
