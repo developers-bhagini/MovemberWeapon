@@ -44,7 +44,7 @@ public class OpenCameraFragment extends Fragment implements View.OnClickListener
     private ImageView mOpenCamera;
     private Bundle mBundle;
     private Uri imageUri = null;
-    private Button mMenuMutton;
+    private Button mMenuButton;
     private PopupWindow mPopup_window;
 
     public OpenCameraFragment() {
@@ -122,8 +122,8 @@ public class OpenCameraFragment extends Fragment implements View.OnClickListener
                              Bundle savedInstanceState) {
         mBundle = new Bundle();
         mRootView = inflater.inflate(R.layout.open_camera_fragment, container, false);
-        mMenuMutton = (Button) mRootView.findViewById(R.id.menu_button);
-        mMenuMutton.setOnClickListener(this);
+        mMenuButton = (Button) mRootView.findViewById(R.id.menu_button);
+        mMenuButton.setOnClickListener(this);
         mOpenCamera = (ImageView) mRootView.findViewById(R.id.open_camera_id);
         mOpenCamera.setOnClickListener(this);
         return mRootView;
@@ -208,22 +208,33 @@ public class OpenCameraFragment extends Fragment implements View.OnClickListener
 
     //TODO:needs to be more generic code for xiomi
     private void onSelectFromGalleryResult(Intent data) {
-        Uri selectedImageUri = data.getData();
-        try {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImageUri);
-            //Giving device width to the square image
-            bitmap = Bitmap.createScaledBitmap(bitmap, getDeviceWidth(), getDeviceWidth(), true);
-            mBundle.putParcelable("Photo", bitmap);
-            goToNextScreen();
-        } catch (IOException e) {
-            Log.e(TAG, "Exception :: ", e);
+        if (null != data) {
+            Uri selectedImageUri = data.getData();
+            if (null != selectedImageUri) {
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImageUri);
+                    if (null != bitmap) {
+                        //Giving device width to the square image
+                        bitmap = Bitmap.createScaledBitmap(bitmap, getDeviceWidth(), getDeviceWidth(), true);
+
+                        mBundle.putParcelable("Photo", bitmap);
+                        goToNextScreen();
+                    }
+                } catch (IOException e) {
+                    Log.e(TAG, "Exception :: ", e);
+                }
+            }
         }
     }
 
     private int getDeviceWidth() {
         DisplayMetrics displaymetrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        return displaymetrics.widthPixels;
+        if (null != getActivity()) {
+            getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+            return displaymetrics.widthPixels;
+        } else {
+            return 0;
+        }
     }
 
 
@@ -262,6 +273,27 @@ public class OpenCameraFragment extends Fragment implements View.OnClickListener
             }
         }
 
+    }
+
+    public PopupWindow popupDisplay() {
+
+        final PopupWindow popupWindow = new PopupWindow(getActivity());
+
+        // inflate your layout or dynamically add view
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        View view = inflater.inflate(R.layout.custom_popup_layout, null);
+
+        Button item_home = (Button) view.findViewById(R.id.home_button);
+        Button item_help = (Button) view.findViewById(R.id.help_button);
+        item_home.setOnClickListener(this);
+        item_help.setOnClickListener(this);
+        popupWindow.setFocusable(true);
+        popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow.setContentView(view);
+
+        return popupWindow;
     }
 
     public class LoadImagesFromSDCard extends AsyncTask<String, Void, Void> {
@@ -318,26 +350,5 @@ public class OpenCameraFragment extends Fragment implements View.OnClickListener
 
         }
 
-    }
-
-    public PopupWindow popupDisplay() {
-
-        final PopupWindow popupWindow = new PopupWindow(getActivity());
-
-        // inflate your layout or dynamically add view
-        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        View view = inflater.inflate(R.layout.custom_popup_layout, null);
-
-        Button item_home = (Button) view.findViewById(R.id.home_button);
-        Button item_help = (Button) view.findViewById(R.id.help_button);
-        item_home.setOnClickListener(this);
-        item_help.setOnClickListener(this);
-        popupWindow.setFocusable(true);
-        popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-        popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-        popupWindow.setContentView(view);
-
-        return popupWindow;
     }
 }

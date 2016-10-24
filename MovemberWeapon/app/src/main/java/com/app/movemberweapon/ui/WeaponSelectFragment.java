@@ -8,10 +8,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.PointF;
-import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -58,6 +56,7 @@ public class WeaponSelectFragment extends Fragment implements View.OnClickListen
     private float d = 0f;
     private float newRot = 0f;
     private float[] lastEvent = null;
+
     public WeaponSelectFragment() {
         // Required empty public constructor
     }
@@ -92,14 +91,15 @@ public class WeaponSelectFragment extends Fragment implements View.OnClickListen
         mOkButtonImageView.setOnClickListener(this);
         mMustacheView.setOnTouchListener(this);
         mImageContainer = (FrameLayout) mRootView.findViewById(R.id.image_containter);
-        //mImageContainer.setOnTouchListener(this);
         return mRootView;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mImageContainer.setBackground(new BitmapDrawable(getActivity().getResources(), thumbnail));
+        if (null != mImageContainer) {
+            mImageContainer.setBackground(new BitmapDrawable(getActivity().getResources(), thumbnail));
+        }
 
     }
 
@@ -237,11 +237,6 @@ public class WeaponSelectFragment extends Fragment implements View.OnClickListen
                 }
                 break;
         }
-/*        Log.d(TAG, "parent left " + mImageContainer.getLeft() + " parent right  " + mImageContainer.getRight());
-        RectF r = new RectF();
-        matrix.mapRect(r);
-        Log.d(TAG, "child left " + r.left + " parent right  " + r.right);*/
-
         view.setImageMatrix(matrix);
         return true;
     }

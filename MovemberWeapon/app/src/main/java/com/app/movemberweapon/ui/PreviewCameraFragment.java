@@ -40,7 +40,6 @@ import java.io.IOException;
 public class PreviewCameraFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = PreviewCameraFragment.class.getSimpleName();
     private View mRootView;
-    private ImageView mManImage;
     private ImageView mPhotoPreview;
     private ImageView mRetakeButton;
     private ImageView mProceedButton;
@@ -131,7 +130,6 @@ public class PreviewCameraFragment extends Fragment implements View.OnClickListe
         mRootView = inflater.inflate(R.layout.preview_camera_fragment, container, false);
         mMenuButton = (Button) mRootView.findViewById(R.id.menu_button);
         mMenuButton.setOnClickListener(this);
-        mManImage = (ImageView) mRootView.findViewById(R.id.man_image);
         mPhotoPreview = (ImageView) mRootView.findViewById(R.id.capture_demo_screen);
         mRetakeButton = (ImageView) mRootView.findViewById(R.id.retake_id);
         mProceedButton = (ImageView) mRootView.findViewById(R.id.proceed_id);
@@ -143,7 +141,9 @@ public class PreviewCameraFragment extends Fragment implements View.OnClickListe
     @Override
     public void onResume() {
         super.onResume();
-        mPhotoPreview.setImageBitmap(thumbnail);
+        if (null != mPhotoPreview) {
+            mPhotoPreview.setImageBitmap(thumbnail);
+        }
     }
 
     @Override
@@ -151,7 +151,6 @@ public class PreviewCameraFragment extends Fragment implements View.OnClickListe
         switch (v.getId()) {
             case R.id.retake_id:
                 checkForPermission();
-                //selectImage();
                 break;
             case R.id.proceed_id:
                 mBundle.putParcelable("Photo", thumbnail);
@@ -254,16 +253,6 @@ public class PreviewCameraFragment extends Fragment implements View.OnClickListe
     }
 
 
-    private void goToNextScreen() {
-        PreviewCameraFragment previewFragment = new PreviewCameraFragment();
-        previewFragment.setArguments(mBundle);
-        FragmentTransaction lTransaction = getFragmentManager().beginTransaction();
-        lTransaction.setCustomAnimations(R.animator.slide_in_from_right, R.animator.slide_out_towards_left, R.animator.slide_in_from_leftt, R.animator.slide_out_towards_right);
-        lTransaction.addToBackStack(null);
-        lTransaction.replace(R.id.container, previewFragment);
-        lTransaction.commitAllowingStateLoss();
-    }
-
     private void checkForPermission() {
         boolean hasPermission = (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) &&
                 (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) &&
@@ -289,6 +278,27 @@ public class PreviewCameraFragment extends Fragment implements View.OnClickListe
             }
         }
 
+    }
+
+    public PopupWindow popupDisplay() {
+
+        final PopupWindow popupWindow = new PopupWindow(getActivity());
+
+        // inflate your layout or dynamically add view
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        View view = inflater.inflate(R.layout.custom_popup_layout, null);
+
+        Button item_home = (Button) view.findViewById(R.id.home_button);
+        Button item_help = (Button) view.findViewById(R.id.help_button);
+        item_home.setOnClickListener(this);
+        item_help.setOnClickListener(this);
+        popupWindow.setFocusable(true);
+        popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow.setContentView(view);
+
+        return popupWindow;
     }
 
     public class LoadImagesFromSDCard extends AsyncTask<String, Void, Void> {
@@ -344,27 +354,6 @@ public class PreviewCameraFragment extends Fragment implements View.OnClickListe
 
         }
 
-    }
-
-    public PopupWindow popupDisplay() {
-
-        final PopupWindow popupWindow = new PopupWindow(getActivity());
-
-        // inflate your layout or dynamically add view
-        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        View view = inflater.inflate(R.layout.custom_popup_layout, null);
-
-        Button item_home = (Button) view.findViewById(R.id.home_button);
-        Button item_help = (Button) view.findViewById(R.id.help_button);
-        item_home.setOnClickListener(this);
-        item_help.setOnClickListener(this);
-        popupWindow.setFocusable(true);
-        popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-        popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-        popupWindow.setContentView(view);
-
-        return popupWindow;
     }
 
 }
