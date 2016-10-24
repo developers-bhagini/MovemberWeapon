@@ -76,6 +76,6 @@
             android:adjustViewBounds="false"
             android:cropToPadding="false"
             android:scaleType="fitStart"
-            app:srcCompat="@drawable/button_ok" />
+            app:srcCompat="@drawable/ok_button" />
     </LinearLayout>
 </LinearLayout>

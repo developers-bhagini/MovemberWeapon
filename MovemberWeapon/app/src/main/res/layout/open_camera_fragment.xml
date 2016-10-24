@@ -28,7 +28,7 @@
         android:layout_gravity="center"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
-        app:srcCompat="@drawable/open_camera_button" />
+        app:srcCompat="@drawable/open_camera" />
 
     <ImageView
         android:id="@+id/capture_demo_image_id"
