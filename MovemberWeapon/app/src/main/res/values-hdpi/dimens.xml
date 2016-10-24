@@ -1,0 +1,14 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="bar_height">100dp</dimen>
+    <dimen name="action_bar_height_size">120dp</dimen>
+    <dimen name="fb_button_height_size">40dp</dimen>
+    <dimen name="fb_button_width_size">180dp</dimen>
+    <dimen name="fb_button_bottom_margin_size">0dp</dimen>
+    <dimen name="retake_button_right_margin_size">28dp</dimen>
+    <dimen name="retake_button_end_margin_size">34dp</dimen>
+    <dimen name="proceed_button_right_margin_size">34dp</dimen>
+    <dimen name="proceed_button_end_margin_size">47dp</dimen>
+</resources>
