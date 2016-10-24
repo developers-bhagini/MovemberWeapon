@@ -109,7 +109,7 @@ public class ShareFragment extends Fragment implements View.OnClickListener {
         mMenuButton.setOnClickListener(this);
         mFbShareButton = (ImageView) mRootView.findViewById(R.id.fb_share);
         mFbShareButton.setOnClickListener(this);
-        mPhotoView = (ImageView) mRootView.findViewById(R.id.white_box);
+        mPhotoView = (ImageView) mRootView.findViewById(R.id.whitebox);
         Bundle lBundle = this.getArguments();
         if (null != lBundle) {
             mThumbnail = lBundle.getParcelable("Photo");
