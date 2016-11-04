@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.app.movemberweapon.R;
 import com.app.movemberweapon.object.ImageItem;
+import com.app.movemberweapon.util.Constants;
 
 import java.util.ArrayList;
 
@@ -56,6 +57,7 @@ public class WeaponSelectFragment extends Fragment implements View.OnClickListen
     private float d = 0f;
     private float newRot = 0f;
     private float[] lastEvent = null;
+    private Bundle mBundle;
 
     public WeaponSelectFragment() {
         // Required empty public constructor
@@ -71,8 +73,12 @@ public class WeaponSelectFragment extends Fragment implements View.OnClickListen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = this.getArguments();
+        mBundle=new Bundle();
         if (bundle != null) {
             thumbnail = (Bitmap) bundle.getParcelable("Photo");
+            mBundle.putString(Constants.DOCTOR_NAME, bundle.getString(Constants.DOCTOR_NAME));
+            mBundle.putString(Constants.DOCTOR_SPECIALITY, bundle.getString(Constants.DOCTOR_SPECIALITY));
+            mBundle.putString(Constants.DOCTOR_LOCATION, bundle.getString(Constants.DOCTOR_LOCATION));
         }
     }
 
@@ -122,12 +128,12 @@ public class WeaponSelectFragment extends Fragment implements View.OnClickListen
                 lTransaction.setCustomAnimations(R.animator.slide_in_from_right, R.animator.slide_out_towards_left, R.animator.slide_in_from_leftt, R.animator.slide_out_towards_right);
                 lTransaction.addToBackStack(null);
                 ShareFragment lShareFragment = ShareFragment.newInstance();
-                Bundle lBundle = new Bundle();
+
                 mImageContainer.setDrawingCacheEnabled(true);
                 mImageContainer.buildDrawingCache();
                 Bitmap bitmap = mImageContainer.getDrawingCache();
-                lBundle.putParcelable("Photo", bitmap.copy(bitmap.getConfig(), true));
-                lShareFragment.setArguments(lBundle);
+                mBundle.putParcelable("Photo", bitmap.copy(bitmap.getConfig(), true));
+                lShareFragment.setArguments(mBundle);
                 lTransaction.replace(R.id.container, lShareFragment);
                 lTransaction.commitAllowingStateLoss();
                 break;

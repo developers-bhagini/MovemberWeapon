@@ -32,6 +32,7 @@ import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.app.movemberweapon.R;
+import com.app.movemberweapon.util.CameraUtil;
 import com.app.movemberweapon.util.Constants;
 
 import java.io.IOException;
@@ -120,7 +121,13 @@ public class OpenCameraFragment extends Fragment implements View.OnClickListener
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mBundle = new Bundle();
+        Bundle bundle = this.getArguments();
+        mBundle=new Bundle();
+        if (bundle != null) {
+            mBundle.putString(Constants.DOCTOR_NAME,bundle.getString(Constants.DOCTOR_NAME));
+            mBundle.putString(Constants.DOCTOR_SPECIALITY, bundle.getString(Constants.DOCTOR_SPECIALITY));
+            mBundle.putString(Constants.DOCTOR_LOCATION, bundle.getString(Constants.DOCTOR_LOCATION));
+        }
         mRootView = inflater.inflate(R.layout.open_camera_fragment, container, false);
         mMenuButton = (Button) mRootView.findViewById(R.id.menu_button);
         mMenuButton.setOnClickListener(this);
@@ -215,6 +222,7 @@ public class OpenCameraFragment extends Fragment implements View.OnClickListener
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImageUri);
                     if (null != bitmap) {
                         //Giving device width to the square image
+                        bitmap=CameraUtil.changeOrientationIfRequired(selectedImageUri,bitmap,getActivity());
                         bitmap = Bitmap.createScaledBitmap(bitmap, getDeviceWidth(), getDeviceWidth(), true);
 
                         mBundle.putParcelable("Photo", bitmap);
@@ -322,6 +330,7 @@ public class OpenCameraFragment extends Fragment implements View.OnClickListener
 
                 if (bitmap != null) {
                     //taking device width for both height and width for the square image
+                    bitmap=CameraUtil.changeOrientationIfRequired(uri,bitmap,getActivity());
                     newBitmap = Bitmap.createScaledBitmap(bitmap, getDeviceWidth(), getDeviceWidth(), true);
 
                     bitmap.recycle();

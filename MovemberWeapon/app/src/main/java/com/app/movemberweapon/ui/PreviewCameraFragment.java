@@ -32,6 +32,7 @@ import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.app.movemberweapon.R;
+import com.app.movemberweapon.util.CameraUtil;
 import com.app.movemberweapon.util.Constants;
 
 import java.io.IOException;
@@ -117,8 +118,12 @@ public class PreviewCameraFragment extends Fragment implements View.OnClickListe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = this.getArguments();
+        mBundle = new Bundle();
         if (bundle != null) {
             thumbnail = (Bitmap) bundle.getParcelable("Photo");
+            mBundle.putString(Constants.DOCTOR_NAME, bundle.getString(Constants.DOCTOR_NAME));
+            mBundle.putString(Constants.DOCTOR_SPECIALITY, bundle.getString(Constants.DOCTOR_SPECIALITY));
+            mBundle.putString(Constants.DOCTOR_LOCATION, bundle.getString(Constants.DOCTOR_LOCATION));
         }
 
     }
@@ -126,7 +131,6 @@ public class PreviewCameraFragment extends Fragment implements View.OnClickListe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mBundle = new Bundle();
         mRootView = inflater.inflate(R.layout.preview_camera_fragment, container, false);
         mMenuButton = (Button) mRootView.findViewById(R.id.menu_button);
         mMenuButton.setOnClickListener(this);
@@ -236,13 +240,18 @@ public class PreviewCameraFragment extends Fragment implements View.OnClickListe
     //TODO:needs to be more generic code for xiomi
     private void onSelectFromGalleryResult(Intent data) {
         Uri selectedImageUri = data.getData();
-        try {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImageUri);
-            //Giving device width to the square image
-            thumbnail = Bitmap.createScaledBitmap(bitmap, getDeviceWidth(), getDeviceWidth(), true);
-            mPhotoPreview.setImageBitmap(thumbnail);
-        } catch (IOException e) {
-            Log.e(TAG, "Exception :: ", e);
+        if (null != selectedImageUri) {
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImageUri);
+                if (null != bitmap) {
+                    bitmap = CameraUtil.changeOrientationIfRequired(selectedImageUri, bitmap, getActivity());
+                    //Giving device width to the square image
+                    thumbnail = Bitmap.createScaledBitmap(bitmap, getDeviceWidth(), getDeviceWidth(), true);
+                    mPhotoPreview.setImageBitmap(thumbnail);
+                }
+            } catch (IOException e) {
+                Log.e(TAG, "Exception :: ", e);
+            }
         }
     }
 
@@ -327,6 +336,7 @@ public class PreviewCameraFragment extends Fragment implements View.OnClickListe
 
                 if (bitmap != null) {
                     //taking device width for both height and width for the square image
+                    bitmap=CameraUtil.changeOrientationIfRequired(uri,bitmap,getActivity());
                     newBitmap = Bitmap.createScaledBitmap(bitmap, getDeviceWidth(), getDeviceWidth(), true);
 
                     bitmap.recycle();

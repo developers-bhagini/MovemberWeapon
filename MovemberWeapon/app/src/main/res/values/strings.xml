@@ -12,6 +12,7 @@
     <string name="confirmation_dialog_message_text">Movember Weapon app wants to post on Facebook Movember page</string>
     <string name="yes_text">Confirm</string>
     <string name="no_text">Cancel</string>
+    <string name="pledge_text_content">This is my Movember Weapon</string>
 
     <string-array name="image_array_list">
         <item>@drawable/image_1</item>

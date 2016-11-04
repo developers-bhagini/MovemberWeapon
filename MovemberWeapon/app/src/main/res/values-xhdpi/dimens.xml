@@ -11,5 +11,10 @@
     <dimen name="retake_button_end_margin_size">34dp</dimen>
     <dimen name="proceed_button_right_margin_size">34dp</dimen>
     <dimen name="proceed_button_end_margin_size">47dp</dimen>
-
+    <dimen name="details_frame_height_size">300dp</dimen>
+    <dimen name="submit_btn_height_size">65dp</dimen>
+    <dimen name="submit_btn_width_size">170dp</dimen>
+    <dimen name="submit_btn_text_size">35sp</dimen>
+    <dimen name="mov_bottom">10dp</dimen>
+    <dimen name="mov_left_margin">18dp</dimen>
 </resources>

@@ -11,4 +11,5 @@
     <dimen name="retake_button_end_margin_size">34dp</dimen>
     <dimen name="proceed_button_right_margin_size">34dp</dimen>
     <dimen name="proceed_button_end_margin_size">47dp</dimen>
+    <dimen name="name_text_size">16sp</dimen>
 </resources>

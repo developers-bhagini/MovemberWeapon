@@ -15,8 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.movemberweapon.R;
@@ -46,6 +48,8 @@ public class ShareFragment extends Fragment implements View.OnClickListener {
     private ImageView mFbShareButton;
     private Bitmap mThumbnail;
     private ImageView mPhotoView;
+    private TextView mPledgeTextView;
+    private FrameLayout mBadgeView;
 
     private CallbackManager mCallbackManager;
 
@@ -57,6 +61,8 @@ public class ShareFragment extends Fragment implements View.OnClickListener {
     private String[] mPermissions = new String[]{"publish_actions"};
     private Button mMenuButton;
     private PopupWindow mPopup_window;
+    private TextView doctorNameTextView;
+    private TextView doctorLocationTextView;
     private FacebookCallback<LoginResult> callback = new FacebookCallback<LoginResult>() {
         @Override
         public void onSuccess(LoginResult loginResult) {
@@ -105,15 +111,22 @@ public class ShareFragment extends Fragment implements View.OnClickListener {
         initializeFacebookSdk();
         pd = new ProgressDialog(getActivity());
         mRootView = inflater.inflate(R.layout.share_fragment, container, false);
+        mBadgeView = (FrameLayout) mRootView.findViewById(R.id.badge_layout);
+        mPledgeTextView = (TextView) mRootView.findViewById(R.id.pledgetext);
         mMenuButton = (Button) mRootView.findViewById(R.id.menu_button);
         mMenuButton.setOnClickListener(this);
         mFbShareButton = (ImageView) mRootView.findViewById(R.id.fb_share);
         mFbShareButton.setOnClickListener(this);
-        mPhotoView = (ImageView) mRootView.findViewById(R.id.whitebox);
+        mPhotoView = (ImageView) mRootView.findViewById(R.id.sharing_image);
+        doctorNameTextView=(TextView)mRootView.findViewById(R.id.name);
+        doctorLocationTextView=(TextView)mRootView.findViewById(R.id.place);
         Bundle lBundle = this.getArguments();
         if (null != lBundle) {
+            doctorNameTextView.setText("Dr."+lBundle.getString(Constants.DOCTOR_NAME));
+            doctorLocationTextView.setText(lBundle.getString(Constants.DOCTOR_LOCATION));
             mThumbnail = lBundle.getParcelable("Photo");
             mPhotoView.setImageBitmap(mThumbnail);
+            mPledgeTextView.bringToFront();
         }
         return mRootView;
     }
@@ -203,6 +216,9 @@ public class ShareFragment extends Fragment implements View.OnClickListener {
 
     private void postToPage() {
         Bundle params = new Bundle();
+        mBadgeView.setDrawingCacheEnabled(true);
+        mBadgeView.buildDrawingCache();
+        mThumbnail = mBadgeView.getDrawingCache();
         Log.d(TAG, "postToPage :: " + mThumbnail);
         params.putParcelable("source", mThumbnail);
 
@@ -259,27 +275,6 @@ public class ShareFragment extends Fragment implements View.OnClickListener {
         mAlertDialog.show();
     }
 
-    public static class NativeFragmentWrapper extends android.support.v4.app.Fragment {
-        private Fragment nativeFragment = null;
-
-        public NativeFragmentWrapper(Fragment nativeFragment) {
-            this.nativeFragment = nativeFragment;
-        }
-
-        public NativeFragmentWrapper() {
-        }
-
-        @Override
-        public void startActivityForResult(Intent intent, int requestCode) {
-            nativeFragment.startActivityForResult(intent, requestCode);
-        }
-
-        @Override
-        public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-            nativeFragment.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
     public PopupWindow popupDisplay() {
 
         final PopupWindow popupWindow = new PopupWindow(getActivity());
@@ -299,5 +294,26 @@ public class ShareFragment extends Fragment implements View.OnClickListener {
         popupWindow.setContentView(view);
 
         return popupWindow;
+    }
+
+    public static class NativeFragmentWrapper extends android.support.v4.app.Fragment {
+        private Fragment nativeFragment = null;
+
+        public NativeFragmentWrapper(Fragment nativeFragment) {
+            this.nativeFragment = nativeFragment;
+        }
+
+        public NativeFragmentWrapper() {
+        }
+
+        @Override
+        public void startActivityForResult(Intent intent, int requestCode) {
+            nativeFragment.startActivityForResult(intent, requestCode);
+        }
+
+        @Override
+        public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+            nativeFragment.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }
