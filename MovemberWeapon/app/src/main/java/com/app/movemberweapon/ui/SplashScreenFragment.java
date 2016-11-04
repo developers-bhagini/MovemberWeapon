@@ -47,6 +47,7 @@ public class SplashScreenFragment extends Fragment {
                 FragmentTransaction lTransaction = getFragmentManager().beginTransaction();
                 lTransaction.setCustomAnimations(R.animator.slide_in_from_right, R.animator.slide_out_towards_left, R.animator.slide_in_from_leftt, R.animator.slide_out_towards_right);
                 lTransaction.replace(R.id.container, DoctorDetailsFragment.newInstance());
+                //lTransaction.addToBackStack(null);
                 lTransaction.commitAllowingStateLoss();
             }
         }, Constants.SPLASH_TIME);

@@ -147,7 +147,7 @@ public class WeaponSelectFragment extends Fragment implements View.OnClickListen
                 }
                 FragmentTransaction lTranscation = getFragmentManager().beginTransaction();
                 lTranscation.setCustomAnimations(R.animator.slide_in_from_right, R.animator.slide_out_towards_left, R.animator.slide_in_from_leftt, R.animator.slide_out_towards_right);
-                lTranscation.replace(R.id.container, OpenCameraFragment.newInstance()).commit();
+                lTranscation.replace(R.id.container, DoctorDetailsFragment.newInstance()).commit();
                 break;
             case R.id.help_button:
                 if (null != mPopup_window) {
