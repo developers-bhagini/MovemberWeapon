@@ -43,5 +43,6 @@
     <string name="help_text2">2. Click the option of  ”Open Camera”. Use either photo library or open camera to capture the image. Proceed if the image is as per your expectation.</string>
     <string name="help_text3">3. Request the doctor to choose the moustache from the provided catalogue. The moustache can be dragged and placed at the correct position. Click on ‘ok’.</string>
     <string name="help_text4">4. Share the image in facebook.</string>
+    <string name="help">Help</string>
 
 </resources>
