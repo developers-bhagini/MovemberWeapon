@@ -13,7 +13,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupWindow;
-import android.widget.Toast;
 
 import com.app.movemberweapon.R;
 import com.app.movemberweapon.util.Constants;
@@ -103,7 +102,10 @@ public class DoctorDetailsFragment extends Fragment implements View.OnClickListe
                 if (null != mPopup_window) {
                     mPopup_window.dismiss();
                 }
-                Toast.makeText(getActivity(), getString(R.string.in_progress_text), Toast.LENGTH_SHORT).show();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.setCustomAnimations(R.animator.slide_in_from_right, R.animator.slide_out_towards_left, R.animator.slide_in_from_leftt, R.animator.slide_out_towards_right);
+                transaction.addToBackStack(null);
+                transaction.replace(R.id.container, HelpFragment.newInstance()).commit();
                 break;
         }
     }

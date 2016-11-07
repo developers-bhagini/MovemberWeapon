@@ -209,7 +209,10 @@ public class ShareFragment extends Fragment implements View.OnClickListener {
                 if (null != mPopup_window) {
                     mPopup_window.dismiss();
                 }
-                Toast.makeText(getActivity(), getString(R.string.in_progress_text), Toast.LENGTH_SHORT).show();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.setCustomAnimations(R.animator.slide_in_from_right, R.animator.slide_out_towards_left, R.animator.slide_in_from_leftt, R.animator.slide_out_towards_right);
+                transaction.addToBackStack(null);
+                transaction.replace(R.id.container, HelpFragment.newInstance()).commit();
                 break;
         }
     }

@@ -13,6 +13,7 @@
     <string name="yes_text">Confirm</string>
     <string name="no_text">Cancel</string>
     <string name="pledge_text_content">This is my Movember Weapon</string>
+    <string name="swipe_right_information_text">Please swipe right to continue</string>
 
     <string-array name="image_array_list">
         <item>@drawable/image_1</item>
@@ -37,5 +38,10 @@
         <item>THE ROCKSTAR</item>
         <item>THE AFTER EIGHT</item>
     </string-array>
+
+    <string name="help_text1">1. Enter the Doctor Name without \“DR/Dr\”, speciality &amp; location. Submit the details.</string>
+    <string name="help_text2">2. Click the option of  ”Open Camera”. Use either photo library or open camera to capture the image. Proceed if the image is as per your expectation.</string>
+    <string name="help_text3">3. Request the doctor to choose the moustache from the provided catalogue. The moustache can be dragged and placed at the correct position. Click on ‘ok’.</string>
+    <string name="help_text4">4. Share the image in facebook.</string>
 
 </resources>
