@@ -51,7 +51,7 @@ public class SplashScreenFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Toast.makeText(getActivity(), R.string.swipe_right_information_text, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), R.string.swipe_right_information_text, Toast.LENGTH_LONG).show();
 /*        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

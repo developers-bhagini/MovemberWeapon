@@ -32,6 +32,7 @@ import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.app.movemberweapon.R;
+import com.app.movemberweapon.app.MovemberWeaponApp;
 import com.app.movemberweapon.util.CameraUtil;
 import com.app.movemberweapon.util.Constants;
 
@@ -120,7 +121,8 @@ public class PreviewCameraFragment extends Fragment implements View.OnClickListe
         Bundle bundle = this.getArguments();
         mBundle = new Bundle();
         if (bundle != null) {
-            thumbnail = (Bitmap) bundle.getParcelable("Photo");
+//            thumbnail = (Bitmap) bundle.getParcelable("Photo");
+            thumbnail= MovemberWeaponApp.getThumbnail();
             mBundle.putString(Constants.DOCTOR_NAME, bundle.getString(Constants.DOCTOR_NAME));
             mBundle.putString(Constants.DOCTOR_SPECIALITY, bundle.getString(Constants.DOCTOR_SPECIALITY));
             mBundle.putString(Constants.DOCTOR_LOCATION, bundle.getString(Constants.DOCTOR_LOCATION));
@@ -157,7 +159,7 @@ public class PreviewCameraFragment extends Fragment implements View.OnClickListe
                 checkForPermission();
                 break;
             case R.id.proceed_id:
-                mBundle.putParcelable("Photo", thumbnail);
+               // mBundle.putParcelable("Photo", thumbnail);
                 WeaponSelectFragment weaponFragment = WeaponSelectFragment.newInstance();
                 weaponFragment.setArguments(mBundle);
                 FragmentTransaction lTransaction = getFragmentManager().beginTransaction();
@@ -250,6 +252,7 @@ public class PreviewCameraFragment extends Fragment implements View.OnClickListe
                     bitmap = CameraUtil.changeOrientationIfRequired(selectedImageUri, bitmap, getActivity());
                     //Giving device width to the square image
                     thumbnail = Bitmap.createScaledBitmap(bitmap, getDeviceWidth(), getDeviceWidth(), true);
+                    MovemberWeaponApp.setThumbnail(thumbnail);
                     mPhotoPreview.setImageBitmap(thumbnail);
                 }
             } catch (IOException e) {
@@ -362,6 +365,7 @@ public class PreviewCameraFragment extends Fragment implements View.OnClickListe
             }
             if (mBitmap != null) {
                 thumbnail = mBitmap;
+                MovemberWeaponApp.setThumbnail(thumbnail);
                 mPhotoPreview.setImageBitmap(thumbnail);
             }
 

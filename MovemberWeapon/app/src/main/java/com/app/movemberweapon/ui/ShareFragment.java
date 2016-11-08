@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.movemberweapon.R;
+import com.app.movemberweapon.app.MovemberWeaponApp;
 import com.app.movemberweapon.util.Constants;
 import com.app.movemberweapon.util.NetworkUtil;
 import com.facebook.AccessToken;
@@ -124,7 +125,8 @@ public class ShareFragment extends Fragment implements View.OnClickListener {
         if (null != lBundle) {
             doctorNameTextView.setText("Dr."+lBundle.getString(Constants.DOCTOR_NAME));
             doctorLocationTextView.setText(lBundle.getString(Constants.DOCTOR_LOCATION));
-            mThumbnail = lBundle.getParcelable("Photo");
+            //mThumbnail = lBundle.getParcelable("Photo");
+            mThumbnail= MovemberWeaponApp.getThumbnail();
             mPhotoView.setImageBitmap(mThumbnail);
             mPledgeTextView.bringToFront();
         }
@@ -253,29 +255,34 @@ public class ShareFragment extends Fragment implements View.OnClickListener {
     }
 
     private void showFacebookPostConfirmation() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.confirmation_title_message_text);
-        builder.setCancelable(false);
-        builder.setMessage(R.string.confirmation_dialog_message_text)
-                .setPositiveButton(R.string.yes_text, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        if (isLoggedIn()) {
-                            postToPage();
-                        } else {
-                            mLoginButton = (LoginButton) mRootView.findViewById(R.id.login_button);
-                            mLoginButton.performClick();
+        try {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle(R.string.confirmation_title_message_text);
+            builder.setCancelable(false);
+            builder.setMessage(R.string.confirmation_dialog_message_text)
+                    .setPositiveButton(R.string.yes_text, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            if (isLoggedIn()) {
+                                postToPage();
+                            } else {
+
+                                mLoginButton = (LoginButton) mRootView.findViewById(R.id.login_button);
+                                mLoginButton.performClick();
+                            }
                         }
-                    }
-                })
-                .setNegativeButton(R.string.no_text, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        if (null != mAlertDialog) {
-                            mAlertDialog.dismiss();
+                    })
+                    .setNegativeButton(R.string.no_text, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            if (null != mAlertDialog) {
+                                mAlertDialog.dismiss();
+                            }
                         }
-                    }
-                });
-        mAlertDialog = builder.create();
-        mAlertDialog.show();
+                    });
+            mAlertDialog = builder.create();
+            mAlertDialog.show();
+        }catch (RuntimeException e){
+            Log.e(TAG,"junk :: ",e);
+        }
     }
 
     public PopupWindow popupDisplay() {

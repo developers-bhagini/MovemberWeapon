@@ -24,6 +24,7 @@ import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.app.movemberweapon.R;
+import com.app.movemberweapon.app.MovemberWeaponApp;
 import com.app.movemberweapon.object.ImageItem;
 import com.app.movemberweapon.util.Constants;
 
@@ -75,7 +76,8 @@ public class WeaponSelectFragment extends Fragment implements View.OnClickListen
         Bundle bundle = this.getArguments();
         mBundle=new Bundle();
         if (bundle != null) {
-            thumbnail = (Bitmap) bundle.getParcelable("Photo");
+            //thumbnail = (Bitmap) bundle.getParcelable("Photo");
+            thumbnail= MovemberWeaponApp.getThumbnail();
             mBundle.putString(Constants.DOCTOR_NAME, bundle.getString(Constants.DOCTOR_NAME));
             mBundle.putString(Constants.DOCTOR_SPECIALITY, bundle.getString(Constants.DOCTOR_SPECIALITY));
             mBundle.putString(Constants.DOCTOR_LOCATION, bundle.getString(Constants.DOCTOR_LOCATION));
@@ -132,7 +134,8 @@ public class WeaponSelectFragment extends Fragment implements View.OnClickListen
                 mImageContainer.setDrawingCacheEnabled(true);
                 mImageContainer.buildDrawingCache();
                 Bitmap bitmap = mImageContainer.getDrawingCache();
-                mBundle.putParcelable("Photo", bitmap.copy(bitmap.getConfig(), true));
+                //mBundle.putParcelable("Photo", bitmap.copy(bitmap.getConfig(), true));
+                MovemberWeaponApp.setThumbnail(bitmap.copy(bitmap.getConfig(), true));
                 lShareFragment.setArguments(mBundle);
                 lTransaction.replace(R.id.container, lShareFragment);
                 lTransaction.commitAllowingStateLoss();

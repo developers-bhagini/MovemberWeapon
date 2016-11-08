@@ -32,6 +32,7 @@ import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.app.movemberweapon.R;
+import com.app.movemberweapon.app.MovemberWeaponApp;
 import com.app.movemberweapon.util.CameraUtil;
 import com.app.movemberweapon.util.Constants;
 
@@ -228,7 +229,8 @@ public class OpenCameraFragment extends Fragment implements View.OnClickListener
                         bitmap=CameraUtil.changeOrientationIfRequired(selectedImageUri,bitmap,getActivity());
                         bitmap = Bitmap.createScaledBitmap(bitmap, getDeviceWidth(), getDeviceWidth(), true);
 
-                        mBundle.putParcelable("Photo", bitmap);
+                        //mBundle.putParcelable("Photo", bitmap);
+                        MovemberWeaponApp.setThumbnail(bitmap);
                         goToNextScreen();
                     }
                 } catch (IOException e) {
@@ -356,7 +358,8 @@ public class OpenCameraFragment extends Fragment implements View.OnClickListener
             }
             if (mBitmap != null) {
                 // Set Image to ImageView
-                mBundle.putParcelable("Photo", mBitmap);
+                //mBundle.putParcelable("Photo", mBitmap);
+                MovemberWeaponApp.setThumbnail(mBitmap);
                 goToNextScreen();
             }
 
